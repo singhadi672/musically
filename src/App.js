@@ -3,6 +3,7 @@ import React, { useState } from "react";
 //adding components
 import Song from "./components/Song";
 import Player from "./components/Player";
+import Library from "./components/Library";
 
 //adding the data
 import data from "./UtilData";
@@ -23,6 +24,7 @@ function App() {
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
       />
+      <Library song={song} setCurrentSong={setCurrentSong} />
     </div>
   );
 }
