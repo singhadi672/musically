@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { faStepForward } from "@fortawesome/free-solid-svg-icons";
 import { faStepBackward } from "@fortawesome/free-solid-svg-icons";
+import { playAudio } from "../Util";
 
 const Player = ({
   currentSong,
@@ -46,29 +47,15 @@ const Player = ({
     );
     if (direction === "forward") {
       setCurrentSong(song[(currentSongIndex + 1) % song.length]);
-      if (isPlaying) {
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.then((audio) => {
-            audioRef.current.play();
-          });
-        }
-      }
     } else if (direction === "backward") {
       if (currentSongIndex - 1 === -1) {
+        playAudio(isPlaying, audioRef);
         setCurrentSong(song[song.length - 1]);
         return;
       }
       setCurrentSong(song[currentSongIndex - 1]);
-      if (isPlaying) {
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.then((audio) => {
-            audioRef.current.play();
-          });
-        }
-      }
     }
+    playAudio(isPlaying, audioRef);
   }
 
   function changeTime(time) {
