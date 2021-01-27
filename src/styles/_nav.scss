@@ -1,0 +1,40 @@
+.nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 10vh;
+
+  h1 {
+    margin-left: 2rem;
+    font-size: 2rem;
+  }
+
+  button {
+    padding: 1rem;
+    font-size: 1.2rem;
+    border: 2px solid white;
+    color: white;
+    cursor: pointer;
+    background: #332c2c;
+    transition: all 0.5s ease;
+    border-radius: 5px;
+    &:hover {
+      background: white;
+      color: #332c2c;
+    }
+    svg {
+      margin-left: 0.5rem;
+    }
+  }
+}
+
+button:focus {
+  outline: none;
+}
+
+@media screen and (max-width: 768px) {
+  button {
+    z-index: 10;
+  }
+  
+}
