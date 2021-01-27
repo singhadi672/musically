@@ -4,13 +4,15 @@ import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { faStepForward } from "@fortawesome/free-solid-svg-icons";
 import { faStepBackward } from "@fortawesome/free-solid-svg-icons";
 
-const Player = ({ currentSong, setIsPlaying, isPlaying }) => {
-  const audioRef = useRef(null);
+const Player = ({
+  currentSong,
+  setIsPlaying,
+  isPlaying,
+  audioRef,
+  SetCurrentTime,
+  currentTime,
+}) => {
   const [currentIcon, SetCurrentIcon] = useState(faPlay);
-  const [currentTime, SetCurrentTime] = useState({
-    duration: 0,
-    current: 0,
-  });
 
   function playSongHandler() {
     if (isPlaying) {
@@ -22,12 +24,6 @@ const Player = ({ currentSong, setIsPlaying, isPlaying }) => {
       setIsPlaying(!isPlaying);
       SetCurrentIcon(faPause);
     }
-  }
-
-  function timeUpdateHandler(e) {
-    let current = e.target.currentTime;
-    let duration = e.target.duration;
-    SetCurrentTime({ ...currentTime, duration, current });
   }
 
   function changeTime(time) {
@@ -63,12 +59,6 @@ const Player = ({ currentSong, setIsPlaying, isPlaying }) => {
         />
         <FontAwesomeIcon icon={faStepForward} size="2x" />
       </div>
-      <audio
-        onTimeUpdate={timeUpdateHandler}
-        onLoadedMetadata={timeUpdateHandler}
-        ref={audioRef}
-        src={currentSong.audio}
-      ></audio>
     </div>
   );
 };
