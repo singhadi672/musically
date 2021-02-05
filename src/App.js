@@ -19,6 +19,7 @@ function App() {
   const [currentTime, SetCurrentTime] = useState({
     duration: 0,
     current: 0,
+    animation: 0,
   });
   const [libraryStatus, setLibraryStatus] = useState(false);
   const audioRef = useRef(null);
@@ -26,7 +27,26 @@ function App() {
   function timeUpdateHandler(e) {
     let current = e.target.currentTime;
     let duration = e.target.duration;
-    SetCurrentTime({ ...currentTime, duration, current });
+    let currentTime = Math.floor(current);
+    let durationTime = Math.floor(duration);
+    let animatePercentage = Math.floor((currentTime / durationTime) * 100);
+    SetCurrentTime({
+      ...currentTime,
+      duration,
+      current,
+      animation: animatePercentage,
+    });
+  }
+
+  async function songEndHandler() {
+    const currentSongIndex = song.findIndex(
+      (item) => item.id === currentSong.id
+    );
+    await setCurrentSong(song[(currentSongIndex + 1) % song.length]);
+
+    if (isPlaying) {
+      audioRef.current.play();
+    }
   }
 
   return (
@@ -58,6 +78,7 @@ function App() {
         onLoadedMetadata={timeUpdateHandler}
         ref={audioRef}
         src={currentSong.audio}
+        onEnded={songEndHandler}
       ></audio>
     </div>
   );

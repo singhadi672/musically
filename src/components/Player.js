@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { faStepForward } from "@fortawesome/free-solid-svg-icons";
 import { faStepBackward } from "@fortawesome/free-solid-svg-icons";
-import { playAudio } from "../Util";
 
 const Player = ({
   currentSong,
@@ -41,21 +40,25 @@ const Player = ({
     }
   }
 
-  function skipSongHandler(direction) {
+  async function skipSongHandler(direction) {
     const currentSongIndex = song.findIndex(
       (item) => item.id === currentSong.id
     );
     if (direction === "forward") {
-      setCurrentSong(song[(currentSongIndex + 1) % song.length]);
+      await setCurrentSong(song[(currentSongIndex + 1) % song.length]);
     } else if (direction === "backward") {
       if (currentSongIndex - 1 === -1) {
-        playAudio(isPlaying, audioRef);
+        if (isPlaying) {
+          audioRef.current.play();
+        }
         setCurrentSong(song[song.length - 1]);
         return;
       }
       setCurrentSong(song[currentSongIndex - 1]);
     }
-    playAudio(isPlaying, audioRef);
+    if (isPlaying) {
+      audioRef.current.play();
+    }
   }
 
   function changeTime(time) {
@@ -69,17 +72,30 @@ const Player = ({
     SetCurrentTime({ ...currentTime, current: e.target.value });
   }
 
+  const animateTrack = {
+    transform: `translateX(${currentTime.animation}%)`,
+  };
+
   return (
     <div className="player">
       <div className="time-control">
         <p>{changeTime(currentTime.current)}</p>
-        <input
-          min={0}
-          max={currentTime.duration || 0}
-          value={currentTime.current}
-          onChange={inputDragHandler}
-          type="range"
-        />
+        <div
+          style={{
+            background: `linear-gradient(to right,${currentSong.color[0]},${currentSong.color[1]})`,
+          }}
+          className="track"
+        >
+          <input
+            min={0}
+            max={currentTime.duration || 0}
+            value={currentTime.current}
+            onChange={inputDragHandler}
+            type="range"
+          />
+          <div style={animateTrack} className="animate-track"></div>
+        </div>
+
         <p>{changeTime(currentTime.duration)}</p>
       </div>
       <div className="controls">
